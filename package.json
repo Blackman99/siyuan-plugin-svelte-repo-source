@@ -3,7 +3,7 @@
 	"version": "0.4.0",
 	"scripts": {
 		"dev": "vite dev",
-		"build": "vite build && cp -R dist/* ../",
+		"build": "vite build && rm -rf ../_app && cp -R dist/* ../",
 		"package": "svelte-package",
 		"watch": "svelte-package --watch",
 		"preview": "vite preview",

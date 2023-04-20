@@ -3,11 +3,9 @@
 	import { onMount } from 'svelte';
 	import '@sveltejs/site-kit/styles/index.css';
 	import '@sveltejs/site-kit/styles/code.css';
+	import { updateAttr } from '$lib/api';
 
-	let repl;
-	onMount(() => {
-		console.log(window.document);
-		const initialComponents = JSON.parse(window.frameElement?.parentElement?.parentElement?.dataset.svelteRepl || JSON.stringify([
+	const DEFAULT_REPL_STATES =  JSON.stringify([
 				{
 					name: 'App',
 					type: 'svelte',
@@ -20,17 +18,34 @@
 
 <h1>Hello {name}!</h1>`
 				}
-			]))
+			])
+
+	let repl;
+	const ATTR_KEY = 'custom-Svelte-REPL'
+
+	const getBlockEl = () => window.frameElement?.parentElement?.parentElement
+
+	const getReplState = () => {
+		const blockNodeEl = getBlockEl()
+		if(!blockNodeEl) {
+			return DEFAULT_REPL_STATES
+		}
+		return blockNodeEl.getAttribute(ATTR_KEY) || DEFAULT_REPL_STATES
+	}
+
+	onMount(() => {
+		const initialComponents = JSON.parse(getReplState())
 		repl.set({
 			components: initialComponents
 		});
 	});
 
 	const handleReplChange = (changedComponents) => {
-		console.log({ changedComponents });
-		const nodeEl = window.frameElement?.parentElement?.parentElement
-		if(nodeEl) {
-			nodeEl.dataset.svelteRepl = JSON.stringify(changedComponents.detail.components)
+		const blockEl = getBlockEl()
+		if(blockEl) {
+			updateAttr(blockEl.dataset.nodeId, {
+				[ATTR_KEY]: JSON.stringify(changedComponents.detail.components)
+			})
 		}
 	}
 
