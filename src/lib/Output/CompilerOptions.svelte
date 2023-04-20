@@ -3,7 +3,7 @@
 	import { getContext } from 'svelte';
 	import Checkbox from '../Checkbox.svelte';
 
-	const { compile_options } = getContext('REPL');
+	const { compile_options } = getContext('REPL') || {};
 </script>
 
 <div class="options">

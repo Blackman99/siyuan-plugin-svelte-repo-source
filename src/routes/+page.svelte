@@ -5,10 +5,9 @@
 	import '@sveltejs/site-kit/styles/code.css';
 
 	let repl;
-
 	onMount(() => {
-		repl.set({
-			components: [
+		console.log(window.document);
+		const initialComponents = JSON.parse(window.frameElement?.parentElement?.parentElement?.dataset.svelteRepl || JSON.stringify([
 				{
 					name: 'App',
 					type: 'svelte',
@@ -21,13 +20,24 @@
 
 <h1>Hello {name}!</h1>`
 				}
-			]
+			]))
+		repl.set({
+			components: initialComponents
 		});
 	});
+
+	const handleReplChange = (changedComponents) => {
+		console.log({ changedComponents });
+		const nodeEl = window.frameElement?.parentElement?.parentElement
+		if(nodeEl) {
+			nodeEl.dataset.svelteRepl = JSON.stringify(changedComponents.detail.components)
+		}
+	}
+
 </script>
 
 <main>
-	<Repl bind:this={repl} showAst />
+	<Repl bind:this={repl} on:change={handleReplChange} />
 </main>
 
 <style>
