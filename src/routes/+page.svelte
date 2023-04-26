@@ -24,7 +24,7 @@
 	let repl;
 	const ATTR_KEY = 'custom-svelte-repl';
 
-	const getBlockEl = () => window.frameElement?.parentElement?.parentElement;
+	const getBlockEl = () => window.frameElement.parentElement.parentElement;
 
 	const getReplState = async () => {
 		const blockNodeEl = getBlockEl();
@@ -43,8 +43,7 @@
 		});
 
 		// Along with block width
-		frameElement.style.width = frameElement.parentElement.style.width =
-			frameElement.parentElement.parentElement.offsetWidth + 'px';
+		frameElement.style.width = getBlockEl().offsetWidth + 'px';
 	});
 
 	const handleReplChange = debounce((changedComponents) => {
